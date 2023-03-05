@@ -1,31 +1,48 @@
 import 'package:flutter/material.dart';
+import './question.dart';
+import './answer.dart';
 
 void main() {
   runApp(MyApp());
 }
+
 class MyApp extends StatefulWidget {
   @override
-    State<StatefulWidget> createState() {
-      return _MyAppState();
-    }
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
 }
 
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
 
   void _answerQuestion() {
-    setState( () {
+    if(_questionIndex == 2) {
+      return;
+    }
+    setState(() {
       _questionIndex = _questionIndex + 1;
     });
     print(_questionIndex);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     var questions = [
-      'What\'s your favourite color?',
-      'What\'s your favorite animal?'
+      {
+        "questionText": 'What\'s your favourite color?',
+        "answers": ['Black', 'Red', 'Green', 'White']
+      },
+      {
+        "questionText": 'What\'s your favorite animal?',
+        "answers": ['Rabbit', 'Snake', 'Elephant', 'Lion']
+      },
+      {
+        "questionText": 'Who\'s your favourite instructor?',
+        "answers": ['Max', 'Manu', 'Pintu']
+      }
     ];
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -33,32 +50,16 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Text(questions[_questionIndex]),
-            ElevatedButton(
-              onPressed: _answerQuestion,
-              autofocus: true,
-              child: Text('Answer 1'),
+            Question(
+              questions[_questionIndex]['questionText'] as String,
             ),
-            ElevatedButton(
-              onPressed: () => print('answer 2 chosen'),
-              autofocus: true,
-              child: Text('Answer 2'),
-            ),
-             ElevatedButton(
-              onPressed: () => {
-                print('answer 3 chosen')
-              },
-              autofocus: true,
-              child: Text('Answer 3'),
-            ),
-            ElevatedButton(
-              onPressed: (){
-                print('answer 4 chosen');
-              },
-              autofocus: true,
-              child: Text('Answer 4'),
-            ),
-           
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(
+                _answerQuestion,
+                answer,
+              );
+            })
           ],
         ),
       ),
